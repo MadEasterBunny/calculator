@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #e7e7e7;
+}
+
+h1 {
+    text-align: center;
+}
+
+button {
+    font-size: 25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+}
+
+#container {
+    max-width: 230px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background-color: black;
+    margin: 0 auto;
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.display {
+    margin-bottom: 15px;
+}
+
+#display {
+    width: 210px;
+    height: 30px;
+    font-size: 25px;
+    text-align: right;
+    padding: 10px;
+    background-color: #a6ffff;
+    border: none;
+    border-radius: 10px;
+}
+
+#container button:nth-child(2),
+#container button:nth-child(3) {
+  flex-basis: calc(50% - 5px);
+}
+
+.operator,
+.clearDelBtn {
+    color: #fff;
+}
+
+.operator {
+    background-color: #fd842d;
+}
+
+.clearDelBtn {
+    background-color: #353535;
+}
