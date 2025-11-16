@@ -6,6 +6,7 @@ const numpad = [".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const operators = ["+", "-", "*", "/"];
 const equal = ["="];
 const clearDelBtns = ["&#x232B;", "C"];
+const maxLength = 15;
 
 let operand1 = null;
 let operand2 = null;
@@ -40,6 +41,14 @@ const appendNumber = num => {
         setClear = false;
     }
 
+    if(num === "." && display.value.includes(".")) {
+        return;
+    }
+
+    if(display.value.length >= maxLength) {
+        return;
+    }
+
     if(display.value === "0" && num !== ".") {
         display.value = num;
     } else {
@@ -49,32 +58,45 @@ const appendNumber = num => {
 }
 
 const setOperator = operator => {
-    if(hasBeenEvaluated) {
-        return;
-    }
-
     if(operand1 !== null && operator !== "") {
         evaluate();
-        setClear = true;
+        hasBeenEvaluated = false;
+    }
+
+    if(hasBeenEvaluated) {
+        hasBeenEvaluated = false;
+        return;
     }
     
     operand1 = display.value;
     currOperator = operator;
     setClear = true;
-    console.log(`setOperator Operand 1: ${operand1}`);
-    console.log(`setOperator Operand 2: ${operand2}`);
-    console.log(`setOperator Operator: ${currOperator}`);
 }
 
 const evaluate = () => {
-    operand2 = display.value;
+    if(hasBeenEvaluated && currOperator === "") {
+        return;
+    }
+
+    if(currOperator !== "") {
+        operand2 = display.value;
+    } else {
+        if(operand2 === null) {
+            return;
+        }
+    }
 
     if(operand1 !== null && operand2 !== null && currOperator !== "") {
-        const total = operate(currOperator, operand1, operand2);
+        if(currOperator === "/" && operand2 === 0) {
+            display.value = "Error";
+            clear();
+            setClear = true;
+            return;
+        }
+
+        let total = operate(currOperator, operand1, operand2);
+        total = Math.round(total * 1000) / 1000;        
         display.value = total;
-        operand1 = null;
-        operand2 = null;
-        currOperator = "";
         setClear = true;
         hasBeenEvaluated = true;
     }
@@ -161,5 +183,37 @@ container.addEventListener("click", e => {
                 evaluate();
             }
             break;
+    }
+});
+
+const keyActions = {
+    ".": appendNumber,
+    "0": appendNumber,
+    "1": appendNumber,
+    "2": appendNumber,
+    "3": appendNumber,
+    "4": appendNumber,
+    "5": appendNumber,
+    "6": appendNumber,
+    "7": appendNumber,
+    "8": appendNumber,
+    "9": appendNumber,
+    "+": setOperator,
+    "-": setOperator,
+    "*": setOperator,
+    "/": setOperator,
+    "Enter": evaluate,
+    "Backspace": deleteNum,
+    "Escape": clear,
+    "C": clear,
+    "c": clear,
+    "Delete": clear,
+};
+
+document.addEventListener("keydown", e => {
+    const action = keyActions[e.key];
+
+    if(action) {
+        action(e.key);
     }
 })
