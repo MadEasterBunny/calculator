@@ -7,6 +7,27 @@ const operators = ["+", "-", "*", "/"];
 const equal = ["="];
 const clearDelBtns = ["&#x232B;", "C"];
 
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide = (a, b) => a / b;
+
+const operate = (operator, operand1, operand2) => {
+    const a = +operand1;
+    const b = +operand2;
+
+    switch(operator) {
+        case "+":
+            return add(a, b);
+        case "-":
+            return subtract(a, b);
+        case "*":
+            return multiply(a, b);
+        case "/":
+            return divide(a, b);
+    }
+}
+
 for(let i = 0; i < buttons.length; i++) {
     const button = document.createElement("button");
     button.innerHTML = buttons[i];
