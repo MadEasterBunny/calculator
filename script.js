@@ -11,6 +11,7 @@ let operand1 = null;
 let operand2 = null;
 let currOperator = "";
 let setClear = false;
+let hasBeenEvaluated = false;
 
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
@@ -44,29 +45,39 @@ const appendNumber = num => {
     } else {
         display.value += num;
     }
+    hasBeenEvaluated = false;
 }
 
 const setOperator = operator => {
+    if(hasBeenEvaluated) {
+        return;
+    }
+
     if(operand1 !== null && operator !== "") {
         evaluate();
+        setClear = true;
     }
-    if(operand1 === null) {
-        operand1 = display.value;
-    }
+    
+    operand1 = display.value;
     currOperator = operator;
     setClear = true;
+    console.log(`setOperator Operand 1: ${operand1}`);
+    console.log(`setOperator Operand 2: ${operand2}`);
+    console.log(`setOperator Operator: ${currOperator}`);
 }
 
 const evaluate = () => {
-    if(currOperator === "") {
-        return;
-    }
     operand2 = display.value;
-    const total = operate(currOperator, operand1, operand2);
-    display.value = total;
-    operand1 = total;
-    currOperator = "";
-    operand2 = null;
+
+    if(operand1 !== null && operand2 !== null && currOperator !== "") {
+        const total = operate(currOperator, operand1, operand2);
+        display.value = total;
+        operand1 = null;
+        operand2 = null;
+        currOperator = "";
+        setClear = true;
+        hasBeenEvaluated = true;
+    }
 }
 
 const clearDisplay = () => {
@@ -83,6 +94,7 @@ const clear = () => {
 const deleteNum = () => {
     let currValue = display.value;
     let newValue = currValue.slice(0, -1);
+
     if(display.value.length <= 1) {
         display.value = 0;
     } else {
@@ -150,6 +162,4 @@ container.addEventListener("click", e => {
             }
             break;
     }
-
-
 })
