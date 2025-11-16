@@ -7,6 +7,11 @@ const operators = ["+", "-", "*", "/"];
 const equal = ["="];
 const clearDelBtns = ["&#x232B;", "C"];
 
+let operand1 = null;
+let operand2 = null;
+let currOperator = "";
+let setClear = false;
+
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
 const multiply = (a, b) => a * b;
@@ -25,6 +30,63 @@ const operate = (operator, operand1, operand2) => {
             return multiply(a, b);
         case "/":
             return divide(a, b);
+    }
+}
+
+const appendNumber = num => {
+    if(setClear) {
+        clearDisplay();
+        setClear = false;
+    }
+
+    if(display.value === "0" && num !== ".") {
+        display.value = num;
+    } else {
+        display.value += num;
+    }
+}
+
+const setOperator = operator => {
+    if(operand1 !== null && operator !== "") {
+        evaluate();
+    }
+    if(operand1 === null) {
+        operand1 = display.value;
+    }
+    currOperator = operator;
+    setClear = true;
+}
+
+const evaluate = () => {
+    if(currOperator === "") {
+        return;
+    }
+    operand2 = display.value;
+    const total = operate(currOperator, operand1, operand2);
+    display.value = total;
+    operand1 = total;
+    currOperator = "";
+    operand2 = null;
+}
+
+const clearDisplay = () => {
+    display.value = 0;
+}
+
+const clear = () => {
+    operand1 = null;
+    operand2 = null;
+    currOperator = "";
+    display.value = 0;
+}
+
+const deleteNum = () => {
+    let currValue = display.value;
+    let newValue = currValue.slice(0, -1);
+    if(display.value.length <= 1) {
+        display.value = 0;
+    } else {
+        display.value = newValue
     }
 }
 
@@ -73,13 +135,19 @@ container.addEventListener("click", e => {
 
     switch(type) {
         case "number":
-            console.log(value);
+            appendNumber(value);
             break;
         case "operator":
-            console.log(value);
+            setOperator(value);
             break;
         case "utility":
-            console.log(value);
+            if(action === "clear") {
+                clear();
+            } else if (action === "delete") {
+                deleteNum();
+            } else {
+                evaluate();
+            }
             break;
     }
 
