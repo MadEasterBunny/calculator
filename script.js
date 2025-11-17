@@ -62,11 +62,6 @@ const setOperator = operator => {
         evaluate();
         hasBeenEvaluated = false;
     }
-
-    if(hasBeenEvaluated) {
-        hasBeenEvaluated = false;
-        return;
-    }
     
     operand1 = display.value;
     currOperator = operator;
@@ -74,16 +69,10 @@ const setOperator = operator => {
 }
 
 const evaluate = () => {
-    if(hasBeenEvaluated && currOperator === "") {
+    if(hasBeenEvaluated) {
         return;
-    }
-
-    if(currOperator !== "") {
-        operand2 = display.value;
     } else {
-        if(operand2 === null) {
-            return;
-        }
+        operand2 = display.value;
     }
 
     if(operand1 !== null && operand2 !== null && currOperator !== "") {
